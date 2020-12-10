@@ -1,1 +1,1 @@
-worker: python bot/mainfeatures.py
+worker: python mainfeatures.py
