@@ -9,7 +9,7 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
-class gsheet(object):
+class gsheetfeatures(object):
     def __init__(self):
         SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
         self.creds = None
@@ -32,6 +32,7 @@ class gsheet(object):
                 pickle.dump(self.creds, token)
 
         self.service = build('sheets', 'v4', credentials=self.creds)
+        
     def add(self,sheetid,sheetrange,ivalue):
         # Call the Sheets API
         sheet = self.service.spreadsheets()
@@ -43,5 +44,24 @@ class gsheet(object):
         result = sheet.values().append(
             spreadsheetId=sheetid, range=sheetrange,
             valueInputOption='RAW', body=body).execute()
+        
+    def updateNumbers(self,sheetid,sheetrange,ivalue):
+        # Call the Sheets API
+        sheet = self.service.spreadsheets()
+        values = []
+        values.append(ivalue)
+        body = {
+            'values': values
+        }
+        result = sheet.values().update(
+            spreadsheetId=sheetid, range=sheetrange,
+            valueInputOption='RAW', body=body).execute()
+    
+    def getColumn(self, sheetid,sheetrange):
+        sheet = self.service.spreadsheets()
+        nameValues = sheet.values().get(spreadsheetId=sheetid, range=sheetrange).execute()
+        name = nameValues.get('values', []);
+        print('{0} rows retrieved.'.format(len(name)));
+        return name;
         
        

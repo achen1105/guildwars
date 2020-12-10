@@ -17,27 +17,27 @@ import discord
 from discord.ext import commands
 import os
 import json
-from gsheet import *
+from gsheetfeatures import *
 
-client = discord.Client()
-sheet = gsheet()
-#default test sheet
+sheet = gsheetfeatures()
+#test sheet
 SPREADSHEET_ID = '1-BsssPXufgAH2-n5ygUW662yAjHdvds8dzAfayifoc4';
 RANGE_NAME = '\'member sheet\'!A3:A40';
-RANGE_SAND = '\'member sheet\'!G3:G40';
-RANGE_CRYSTAL = '\'member sheet\'!H3:H40';
+RANGE_SAND = 'member sheet!G';
+RANGE_CRYSTAL = 'member sheet!H';
 FIELDS = 3;
 token = os.getenv('DISCORD_BOT_TOKEN')
 
-def getSettings(client, message):
+def getSettings(client1, message):
     with open('settings.json', 'r') as f:
         settings = json.load(f)
         
     return settings[str(message.guild.id)];
+    print("get settings was called");
+    
+client = commands.Bot(command_prefix=".")
 
-bot = commands.Bot(command_prefix=getSettings)
-
-@bot.event
+@client.event
 async def on_guild_join(guild):
     with open('settings.json', 'r') as f:
         settings = json.load(f)
@@ -46,9 +46,10 @@ async def on_guild_join(guild):
     
     #write to json file
     with open('settings.json', 'w') as f:
-        json.dump(settings, f, indent=4);    
+        json.dump(settings, f, indent=4);  
+        print("on guild join");
 
-@bot.event
+@client.event
 async def on_guild_remove(guild):
     with open('settings.json', 'r') as f:
         settings = json.load(f)
@@ -59,7 +60,7 @@ async def on_guild_remove(guild):
     with open('settings.json', 'w') as f:
         json.dump(settings, f, indent=4);    
         
-@bot.command()
+@client.command()
 async def changeprefix(ctx, prefix):
     with open('settings.json', 'r') as f:
         settings = json.load(f)
@@ -68,16 +69,15 @@ async def changeprefix(ctx, prefix):
     
     #write to json file
     with open('settings.json', 'w') as f:
-        json.dump(settings, f, indent=4);  
-        
+        json.dump(settings, f, indent=4);         
     
-@bot.command(aliases=['mats', 'addmats'])
+@client.command(aliases=['mats', 'addmats'])
 async def materials(ctx, arg1: int, arg2: int):
     #add reaction to message
     await ctx.send(f'added mats {arg1} and {arg2} :heart:');
     print("added mats");
 
-@bot.command()
+@client.command()
 async def hello(ctx):
     await ctx.send(f'hello!! :heart:');
     print("said hello");
@@ -91,7 +91,8 @@ async def on_message(message):
    # uses global variables to store
     global SPREADSHEET_ID
     global RANGE_NAME
-    global RANGE_MATS
+    global RANGE_SAND
+    global RANGE_CRYSTAL
     global FIELDS
     
     if message.author == client.user:
@@ -126,21 +127,37 @@ async def on_message(message):
         result = [x.strip() for x in msg.split(',')]
         if len(result) == FIELDS:
             # Add
+            '''
             print(message.created_at)
-            #name = [message.author.name] + [str(message.created_at)]
-            #sheet.add(SPREADSHEET_ID, RANGE_NAME, name)
+            name = [message.author.name] + [str(message.created_at)]
+            sheet.add(SPREADSHEET_ID, RANGE_NAME, name)
             
-            nameValues = service.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=RANGE_NAME).execute()
-            rows = result.get('values', [])
-            print('{0} rows retrieved.'.format(len(rows)))
+            '''
             
-            ign = len[0]
-            for x in nameValues:
-                if ign == x:
-                    await message.channel.send('Your data has been successfully submitted!')
+            ign = result[0];
+            lnnamesformat = [];
+            # lnnames stores list of list, lnnnamesformat stores plain list of strings
+            lnnames = sheet.getColumn(SPREADSHEET_ID, RANGE_NAME);
+            for x in lnnames:
+                lnnamesformat.append((x[0]));
+           
+            print(lnnamesformat);
+            print(ign); #test
+            print(result[1]);
+            print(result[2]);
             
-            sheet.add(SPREADSHEET_ID, RANGE_MATS, result)
-            await message.channel.send('Your data has been successfully submitted!')
+            if ign in lnnamesformat:
+                index  = lnnamesformat.index(ign);
+                # [result[1]] because value must be a list
+                sheet.updateNumbers(SPREADSHEET_ID, RANGE_SAND+str(index+3), [result[1]]); 
+                sheet.updateNumbers(SPREADSHEET_ID, RANGE_CRYSTAL+str(index+3), [result[2]]);
+                await message.channel.send('Your data has been successfully submitted!')
+            else:
+                print("In game name not found!");
+                await message.channel.send('Sorry, I could not find your LN username in the master sheet.  Please try again.')
+                
+            #sheet.add(SPREADSHEET_ID, RANGE_SAND, result)
+            #await message.channel.send('Your data has been successfully submitted!')
         else:
             # Needs more/less fields
             await message.channel.send('Error: You need to add {0} fields, meaning it can only have {1} comma.'.format(FIELDS,FIELDS-1))
@@ -166,6 +183,9 @@ async def on_message(message):
     # Fun responses
     if message.content.find("hello momo") != -1:
         await message.channel.send(f'Hello {message.author.mention}! :two_hearts:');
+    
+    #extremely important!!  add at the end of on_message or otherwise commands will not work
+    await client.process_commands(message);
 
 
 client.run(token); # Add bot token here
