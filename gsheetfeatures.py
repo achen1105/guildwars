@@ -55,7 +55,7 @@ class gsheetfeatures(object):
         }
         result = sheet.values().update(
             spreadsheetId=sheetid, range=sheetrange,
-            valueInputOption='RAW', body=body).execute()
+            valueInputOption='USER_ENTERED', body=body).execute()
     
     def getColumn(self, sheetid,sheetrange):
         sheet = self.service.spreadsheets()
