@@ -27,7 +27,7 @@ RANGE_SAND = 'member sheet!G';
 RANGE_CRYSTAL = 'member sheet!H';
 FIELDS = 3;
 token = os.getenv('DISCORD_BOT_TOKEN')
-client = commands.Bot(command_prefix="!")
+client = commands.Bot(command_prefix="s!")
 
 # client commands
 @client.command()
