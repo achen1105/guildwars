@@ -34,7 +34,20 @@ client = commands.Bot(command_prefix="!")
 async def hello(ctx):
     await ctx.send(f'Hello {ctx.message.author.mention}! :revolving_hearts:');
     print("We have said hello");
-        
+
+"""        
+@bot.command()
+async def rename(ctx, name):
+    await bot.user.edit(username=name)
+    
+@bot.command()
+async def changepfp(ctx, name):
+    with open(path_to_file, 'rb') as f:
+        image = f.read()
+
+    await bot.user.edit(avatar=image)
+"""
+    
 # client events    
 @client.event
 async def on_ready():
@@ -59,11 +72,11 @@ async def on_message(message):
         await message.channel.send('You don\'t have the required role!')
         return
     
-    if message.content.startswith('!s help'):
-        await message.channel.send(':cherry_blossom: Please input your guild wars materials in the form `!s <LN username>, <sand>, <crystals>`. Example:\n> !s Nikki, 62, 54\n:cherry_blossom: If your mats were succesfully submitted, there will be a confirmation message and a green check mark react!')
+    if message.content.startswith('s! help'):
+        await message.channel.send(':cherry_blossom: Please input your guild wars materials in the form `s! <LN username>, <sand>, <crystals>`. Example:\n> s! Nikki, 62, 54\n:cherry_blossom: If your mats were succesfully submitted, there will be a confirmation message and a green check mark react!')
         
     # Command to insert data to excel
-    elif message.content.startswith('!s '):
+    elif message.content.startswith('s! '):
 
         # Code
         msg = message.content[3:]
@@ -98,7 +111,7 @@ async def on_message(message):
                 
         else:
             # Needs more/less fields
-            await message.channel.send(':cherry_blossom: Friendly reminder that there should be {0} fields with {1} commas! Example:\n> !s Nikki, 62, 54'.format(FIELDS,FIELDS-1))
+            await message.channel.send(':cherry_blossom: Friendly reminder that there should be {0} fields with {1} commas! Example:\n> s! Nikki, 62, 54'.format(FIELDS,FIELDS-1))
             print('Error: You need to add {0} fields, meaning it has {1} comma(s).'.format(FIELDS,FIELDS-1))
     
     # Whois
