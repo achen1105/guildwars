@@ -51,6 +51,7 @@ async def changepfp(ctx, name):
 # client events    
 @client.event
 async def on_ready():
+    await client.change_presence(status=discord.Status.online, activity=discord.Game('with lovely lattés ♡'));
     print('We have logged in as {0.user}'.format(client))
 
 @client.event
