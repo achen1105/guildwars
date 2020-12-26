@@ -112,7 +112,7 @@ async def on_message(message):
                 
         else:
             # Needs more/less fields
-            await message.channel.send(':cherry_blossom: Friendly reminder that there should be {0} fields with {1} commas! Example:\n> s! Nikki, 62, 54'.format(FIELDS,FIELDS-1))
+            #await message.channel.send(':cherry_blossom: Friendly reminder that there should be {0} fields with {1} commas! Example:\n> s! Nikki, 62, 54'.format(FIELDS,FIELDS-1))
             print('Error: You need to add {0} fields, meaning it has {1} comma(s).'.format(FIELDS,FIELDS-1))
     
     # Whois
