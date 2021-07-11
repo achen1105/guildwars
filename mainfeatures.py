@@ -22,7 +22,7 @@ from gsheetfeatures import *
 sheet = gsheetfeatures()
 # Specific to guild
 SPREADSHEET_ID = os.getenv('sheetID');
-RANGE_NAME = '\'member sheet\'!A3:A40';
+RANGE_NAME = '\'member sheet\'!A3:A40'; # first 38 members on list
 #RANGE_NAME = '\'member sheet\'!A3:A38';
 RANGE_SAND = 'member sheet!G';
 RANGE_CRYSTAL = 'member sheet!H';
@@ -89,9 +89,13 @@ async def on_message(message):
             lnnamesformat = [];
             # lnnames stores list of list, lnnnamesformat stores plain list of strings
             lnnames = sheet.getColumn(SPREADSHEET_ID, RANGE_NAME);
-            #for x in lnnames:
-                #lnnamesformat.append((x[0]));
+            for x in lnnames:
+                if (x==[]):
+                    lnnamesformat.append('');
+                else:
+                    lnnamesformat.append((x[0]));
             
+            """
             # for the less than 38 members case
             curr = 0;
             isEnd = False;
@@ -101,9 +105,11 @@ async def on_message(message):
                 else:
                     isEnd = True;
                 curr = curr + 1;
-                
+            """
+            
             #testing
-            #print(lnnamesformat);
+            #print(lnnames);
+            print(lnnamesformat);
             #print(ign);
             #print(result[1]);
             #print(result[2]);
