@@ -6,8 +6,10 @@ Created on Sat Dec  5 14:35:25 2020
 @author: anitachen
 https://dev.to/p014ri5/making-and-deploying-discord-bot-with-python-4hep
 https://github.com/hugonun/discord2sheet-bot
-mainfeatures.py doesn't work, only main.py does currently'
+mainfeatures.py is the working one
+stack heroku-20
 """
+
 
 # BSD 3-Clause License
 # Copyright (c) 2019, Hugonun(https://github.com/hugonun)
